@@ -1,0 +1,24 @@
+name: Contextes
+
+on: [push, pull_request]
+
+env:
+  APP_NAME: fastapi-starter
+
+jobs:
+  contextes:
+    name: Afficher les contextes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Afficher les valeurs de contexte
+        run: |
+          echo "Application : ${{ env.APP_NAME }}"
+          echo "Acteur      : ${{ github.actor }}"
+          echo "Événement   : ${{ github.event_name }}"
+          echo "Branche     : ${{ github.ref_name }}"
+          echo "SHA         : ${{ github.sha }}"
+          echo "OS runner   : ${{ runner.os }}"
+          echo "head_ref    : '${{ github.head_ref }}'"
+          echo "base_ref    : '${{ github.base_ref }}'"
+      - name: Afficher tout le contexte github
+        run: echo '${{ toJson(github) }}'
