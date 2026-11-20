@@ -15,3 +15,17 @@ Chaque job tourne sur sa propre machine virtuelle, neuve et vide. `report.txt` e
 Partager le même dépôt ne suffit pas : `actions/checkout` ne récupère que les fichiers commités, et `report.txt` n'est jamais commité. Le job `verify` ne fait d'ailleurs pas de checkout.
 
 L'artefact sert de stockage intermédiaire : `upload-artifact` envoie le fichier sur GitHub à la fin de `build`, et `download-artifact` le récupère dans `verify`. `needs: build` garantit que l'artefact existe avant le téléchargement.
+
+## Partie 3 – Créer une action composite locale
+
+### Q6. Pourquoi actions/checkout doit-il s'exécuter avant l'appel d'une action locale ?
+
+Une action locale est désignée par un chemin dans le dépôt (`uses: ./.github/actions/build-info`). Le runner lit son fichier `action.yml` dans le dossier de travail du job.
+
+Au début d'un job, ce dossier est vide : le code du dépôt n'est pas présent sur la machine. C'est `actions/checkout` qui le télécharge. Sans checkout préalable, le runner ne trouve pas `action.yml` et le job échoue.
+
+### Q7. Pourquoi shell: bash est-il obligatoire sur les steps run d'une action composite ?
+
+Dans un workflow, une step `run` sans `shell` utilise un shell par défaut, `bash` sur Linux, ou celui défini dans `defaults.run`. Une action composite n'hérite pas de ces valeurs par défaut : elle peut être appelée depuis n'importe quel workflow, sur n'importe quel système (Linux, Windows, macOS).
+
+GitHub exige donc que chaque step `run` d'une action composite indique explicitement son shell, pour que l'action se comporte de la même façon partout. Sans `shell`, le fichier `action.yml` est refusé et le job échoue.

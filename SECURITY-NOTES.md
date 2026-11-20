@@ -2,7 +2,7 @@
 
 ## Observations sur actions/setup-node
 
-Relevé le 20/11/2026 sur [github.com/actions/setup-node](https://github.com/actions/setup-node) :
+Relevé sur [github.com/actions/setup-node](https://github.com/actions/setup-node) :
 
 - **Créateur vérifié :** l'action est publiée par l'organisation `actions` (GitHub Actions), qui porte le badge de créateur vérifié sur le GitHub Marketplace.
 - **Étoiles :** environ 5 000 (5 028 au moment du relevé).
@@ -10,7 +10,10 @@ Relevé le 20/11/2026 sur [github.com/actions/setup-node](https://github.com/act
 
 ## Test : actions/checkout@main au lieu de @v4
 
-Avec `@v4`, le run affiche un avertissement indiquant que `actions/checkout@v4` cible Node.js 20. Avec `@main`, cet avertissement disparaît pour `checkout`, car la branche `main` de l'action cible déjà Node.js 24 (`using: node24`).
+Les deux runs réussissent, mais ils ne se comportent pas de la même façon :
+
+- **Avec `@v4`** (commit `cf8141c`) : le job `build` affiche l'avertissement « Node.js 20 is deprecated », qui cite `actions/checkout@v4`, `actions/setup-node@v4` et `actions/upload-artifact@v4`.
+- **Avec `@main`** (commit `9362e75`) : le job `build` n'affiche plus aucun avertissement. La branche `main` de `actions/checkout` cible déjà Node.js 24 (`using: node24`), alors que le tag `v4` cible Node.js 20 (`using: node20`).
 
 Le même fichier de workflow exécute donc un code différent selon la référence choisie : `@main` suit les derniers changements de l'action, sans que le workflow ait été modifié.
 
