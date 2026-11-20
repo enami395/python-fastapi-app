@@ -31,3 +31,6 @@ La portée de `GITHUB_ENV` est donc **le job** : une variable écrite dans `GITH
 `deploy` ne dépend plus de `build` : les deux jobs démarrent en même temps, en parallèle. Le contexte `needs` de `deploy` ne contient alors plus `build`, donc `${{ needs.build.outputs.full_version }}` renvoie une chaîne vide. La step affiche `Full version: ` sans valeur, même si `build` réussit. `deploy` s'exécuterait aussi si `build` échouait.
 
 `needs` sert donc à la fois à fixer l'ordre d'exécution et à donner accès aux outputs d'un autre job.
+
+![alt text](image.png)
+![alt text](image-1.png)
