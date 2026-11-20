@@ -16,7 +16,17 @@ Partager le même dépôt ne suffit pas : `actions/checkout` ne récupère que l
 
 L'artefact sert de stockage intermédiaire : `upload-artifact` envoie le fichier sur GitHub à la fin de `build`, et `download-artifact` le récupère dans `verify`. `needs: build` garantit que l'artefact existe avant le téléchargement.
 
+### Exécution réussie avec l'artefact build-report
+
+Run lancé sur `feature/tp-actions` : `build` puis `verify` réussissent, et l'artefact `build-report` (172 octets) apparaît dans la section Artifacts.
+
+![Run réussi : build puis verify, artefact build-report](tp7-partie1-artifact.png)
+
 ## Partie 3 – Créer une action composite locale
+
+L'action composite `build-info` renvoie l'identifiant `my-app-1.0.0`, affiché par la step « Print build id ».
+
+![Logs du job build : Build id is my-app-1.0.0](tp7-partie3-build-id.png)
 
 ### Q6. Pourquoi actions/checkout doit-il s'exécuter avant l'appel d'une action locale ?
 
@@ -29,3 +39,9 @@ Au début d'un job, ce dossier est vide : le code du dépôt n'est pas présent 
 Dans un workflow, une step `run` sans `shell` utilise un shell par défaut, `bash` sur Linux, ou celui défini dans `defaults.run`. Une action composite n'hérite pas de ces valeurs par défaut : elle peut être appelée depuis n'importe quel workflow, sur n'importe quel système (Linux, Windows, macOS).
 
 GitHub exige donc que chaque step `run` d'une action composite indique explicitement son shell, pour que l'action se comporte de la même façon partout. Sans `shell`, le fichier `action.yml` est refusé et le job échoue.
+
+## Partie 4 – Action Docker
+
+L'action `docker-hello` affiche `Hello, my-app`. La step « Run docker hello action » commence par construire l'image (« Building docker image »), puis lance le conteneur avec `docker run`.
+
+![Logs du job docker-hello : Hello, my-app](tp7-partie4-docker-hello.png)

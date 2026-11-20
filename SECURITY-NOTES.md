@@ -17,6 +17,8 @@ Les deux runs réussissent, mais ils ne se comportent pas de la même façon :
 
 Le même fichier de workflow exécute donc un code différent selon la référence choisie : `@main` suit les derniers changements de l'action, sans que le workflow ait été modifié.
 
+![Run avec actions/checkout@main sur feature/tp-actions (commit 9362e75)](tp7-partie2-checkout-main.png)
+
 ## Q3. Pourquoi faut-il épingler une version (@v4) plutôt que @main ?
 
 `@main` désigne une branche, qui change à chaque nouveau commit de l'éditeur de l'action. Le workflow exécute alors du code qui n'a jamais été vérifié, et qui peut changer d'un run à l'autre :
