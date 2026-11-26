@@ -58,6 +58,23 @@ def test_break():
 
 ### Q4. Quelle est la différence observée ? Dans quel cas choisiriez-vous true ? false ?
 
+**Résultats observés :**
+
+| Job | `fail-fast: true` (run #3) | `fail-fast: false` (run #4) |
+| --- | --- | --- |
+| ubuntu-latest, 3.11 | réussi | réussi |
+| ubuntu-latest, 3.12 | réussi | réussi |
+| ubuntu-latest, 3.13 | réussi | réussi |
+| ubuntu-latest, 3.14 (experimental) | réussi | réussi |
+| windows-latest, 3.12 | **annulé** | échoué |
+| windows-latest, 3.13 | échoué | échoué |
+
+Avec `fail-fast: true`, l'échec de `windows-latest, 3.13` a provoqué l'annulation de `windows-latest, 3.12`, qui tournait encore. Les jobs Ubuntu, plus rapides, étaient déjà terminés et ont gardé leur résultat. Avec `fail-fast: false`, aucun job n'est annulé : les deux jobs Windows vont jusqu'au bout et échouent tous les deux.
+
+![Run avec fail-fast: false : les deux jobs Windows échouent, aucun n'est annulé](tp8-partie3-fail-fast-false.png)
+
+**Explication :**
+
 - **`fail-fast: true` (par défaut) :** dès qu'un job de la matrice échoue, GitHub annule tous les jobs encore en cours ou en attente. Les jobs déjà terminés gardent leur résultat. On obtient vite un signal d'échec, mais on ne sait pas si les combinaisons annulées auraient réussi.
 - **`fail-fast: false` :** un échec n'interrompt pas les autres jobs. Tous vont jusqu'au bout, et on obtient le résultat complet de chaque combinaison.
 
