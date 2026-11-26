@@ -114,16 +114,6 @@ Il n'y a jamais plus de 2 jobs en cours en même temps.
 
 Tous les runs du workflow « Matrix Strategy Lab » ont été lancés manuellement sur la branche `feature/tp-strategies` :
 
-| Run | Partie | Configuration | Résultat |
-| --- | --- | --- | --- |
-| #1 | Partie 1 | matrice de base, 6 jobs | réussi |
-| #2 | Partie 2 | `exclude` Windows 3.11, `include` Ubuntu 3.14 | réussi |
-| #3 | Partie 3 | `test_break.py`, `fail-fast: true` | échoué (Windows), un job annulé |
-| #4 | Partie 3 | `test_break.py`, `fail-fast: false` | échoué (Windows), aucun job annulé |
-| #5 | Partie 4 | `max-parallel: 2`, test temporaire supprimé | en cours au moment de la capture |
-
-Les runs #3 et #4 échouent volontairement, à cause du test `test_break.py` qui ne passe pas sous Windows.
-
 ![Historique des runs Matrix Strategy Lab](tp8-historique-runs.png)
 
 ### Q5. Donnez deux raisons d'utiliser max-parallel en entreprise.
