@@ -81,3 +81,19 @@ Avec `fail-fast: true`, l'échec de `windows-latest, 3.13` a provoqué l'annulat
 **Quand choisir `true` :** quand un seul échec suffit à bloquer la livraison et qu'on veut économiser du temps et des minutes de runner, par exemple sur une pull request ou un pipeline de déploiement.
 
 **Quand choisir `false` :** quand on veut savoir précisément quelles combinaisons échouent, par exemple pour diagnostiquer un problème propre à un système ou à une version de Python. C'est le cas ici : seul Windows échoue, et seul `fail-fast: false` le montre clairement.
+
+## Partie 4 – max-parallel
+
+```yaml
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+```
+
+Avec `max-parallel: 2`, GitHub n'exécute que 2 jobs de la matrice à la fois. Les 4 autres restent en attente (« Queued ») et démarrent dès qu'un job se termine. Le run dure plus longtemps, mais n'occupe jamais plus de 2 runners en même temps.
+
+### Q5. Donnez deux raisons d'utiliser max-parallel en entreprise.
+
+1. **Limiter la consommation de ressources et les coûts :** le nombre de runners disponibles est limité (quota de jobs simultanés du compte, ou nombre de machines pour des runners auto-hébergés), et les minutes de runner sont facturées. Limiter le parallélisme évite qu'une seule matrice monopolise tous les runners et bloque les pipelines des autres équipes.
+2. **Protéger les systèmes partagés :** quand les tests utilisent une ressource commune (base de données de test, environnement de recette, API externe avec une limite de requêtes), trop de jobs simultanés peuvent la surcharger ou se gêner entre eux et provoquer des échecs aléatoires. `max-parallel` limite le nombre d'accès simultanés.
