@@ -93,6 +93,39 @@ Avec `fail-fast: true`, l'échec de `windows-latest, 3.13` a provoqué l'annulat
 
 Avec `max-parallel: 2`, GitHub n'exécute que 2 jobs de la matrice à la fois. Les 4 autres restent en attente (« Queued ») et démarrent dès qu'un job se termine. Le run dure plus longtemps, mais n'occupe jamais plus de 2 runners en même temps.
 
+**Observé (run #5) :** au lancement, seuls `ubuntu-latest, 3.11` et `ubuntu-latest, 3.12` sont en cours. Les 4 autres jobs sont en attente.
+
+![Run avec max-parallel: 2 : 2 jobs en cours, 4 en attente](tp8-partie4-max-parallel.png)
+
+Les jobs démarrent ensuite au fur et à mesure que des places se libèrent :
+
+| Job | Démarrage (depuis le premier job) |
+| --- | --- |
+| ubuntu-latest, 3.11 | 0 s |
+| ubuntu-latest, 3.12 | 0 s |
+| ubuntu-latest, 3.13 | 17 s |
+| windows-latest, 3.12 | 17 s |
+| windows-latest, 3.13 | 34 s |
+| ubuntu-latest, 3.14 (experimental) | 49 s |
+
+Il n'y a jamais plus de 2 jobs en cours en même temps.
+
+## Historique des exécutions
+
+Tous les runs du workflow « Matrix Strategy Lab » ont été lancés manuellement sur la branche `feature/tp-strategies` :
+
+| Run | Partie | Configuration | Résultat |
+| --- | --- | --- | --- |
+| #1 | Partie 1 | matrice de base, 6 jobs | réussi |
+| #2 | Partie 2 | `exclude` Windows 3.11, `include` Ubuntu 3.14 | réussi |
+| #3 | Partie 3 | `test_break.py`, `fail-fast: true` | échoué (Windows), un job annulé |
+| #4 | Partie 3 | `test_break.py`, `fail-fast: false` | échoué (Windows), aucun job annulé |
+| #5 | Partie 4 | `max-parallel: 2`, test temporaire supprimé | en cours au moment de la capture |
+
+Les runs #3 et #4 échouent volontairement, à cause du test `test_break.py` qui ne passe pas sous Windows.
+
+![Historique des runs Matrix Strategy Lab](tp8-historique-runs.png)
+
 ### Q5. Donnez deux raisons d'utiliser max-parallel en entreprise.
 
 1. **Limiter la consommation de ressources et les coûts :** le nombre de runners disponibles est limité (quota de jobs simultanés du compte, ou nombre de machines pour des runners auto-hébergés), et les minutes de runner sont facturées. Limiter le parallélisme évite qu'une seule matrice monopolise tous les runners et bloque les pipelines des autres équipes.
